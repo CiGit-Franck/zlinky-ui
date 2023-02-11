@@ -1,0 +1,814 @@
+[
+    {
+        "id": "4650a115906a798f",
+        "type": "group",
+        "z": "498a5b5e5f744dbd",
+        "name": "Z-Linky (Hub)",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#3f5787",
+            "fill-opacity": "0.91",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "3174dbadba187785",
+            "cad9df31052a0bb1",
+            "72e12dee02a9d735",
+            "51f4d0dca092ad10",
+            "b9c74815788ba096",
+            "b5c7bd7d0b62e67c",
+            "9a8d826b180cf7cc",
+            "053adf28066b1bfe",
+            "3dcb3bb629daf919",
+            "1a3685ee4b8ad731",
+            "8f3704e177458329",
+            "825a9158b563840d",
+            "601a8940562f421d",
+            "8977e6859104c304",
+            "7cc77cd0fb2c6119",
+            "1518602607f59720",
+            "bd5f6072e42f93a8",
+            "51a52b5ec6a46502",
+            "a22760d6b6a63caa",
+            "3ea25e80ba1c3289",
+            "477defc3830ae07a",
+            "47f82f886996e579",
+            "0de468db9c9b0831",
+            "d1480a95c20385d7",
+            "5f01e8a93b2cafe4",
+            "c190888f530b5abf",
+            "0f93af4c85f2fbf2",
+            "b803f51e55bfcaeb",
+            "9f9c8a24aae35096",
+            "6d6accc5e7277ca1",
+            "0634cb6378a05eb2",
+            "25f09fb8fe6ef82d",
+            "970a13c28e65e2d9"
+        ],
+        "x": 514,
+        "y": 419,
+        "w": 672,
+        "h": 582
+    },
+    {
+        "id": "3174dbadba187785",
+        "type": "mqtt in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Z-Linky",
+        "topic": "zigbee2mqtt/Zlinky",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "4b2a1c8a515ae08d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 590,
+        "y": 500,
+        "wires": [
+            [
+                "cad9df31052a0bb1",
+                "b9c74815788ba096",
+                "b5c7bd7d0b62e67c",
+                "51f4d0dca092ad10",
+                "8f3704e177458329",
+                "8977e6859104c304"
+            ]
+        ]
+    },
+    {
+        "id": "cad9df31052a0bb1",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "toInfluxdb",
+        "func": "const data = msg.payload;\n\nif(data === null){\n    msg = {};\n    return msg;\n}\n\nflow.set('indexHP', data.current_tier2_summ_delivered);\nflow.set('indexHC', data.current_tier1_summ_delivered);\n\nmsg.payload = {};\nmsg.payload = { intensity: data.rms_current, power: data.apparent_power};\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// indexHP \nif (flow.get('indexHP') === undefined) {\n    flow.set('indexHP', 0);\n}\n// indexHC \nif (flow.get('indexHC') === undefined) {\n    flow.set('indexHC', 0);\n}\n",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 500,
+        "wires": [
+            [
+                "72e12dee02a9d735"
+            ]
+        ]
+    },
+    {
+        "id": "72e12dee02a9d735",
+        "type": "influxdb out",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "influxdb": "c6bd24330ac4722f",
+        "name": "Z-Linky",
+        "measurement": "Zlinky",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "zlinky",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1100,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "51f4d0dca092ad10",
+        "type": "debug",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "debug 11",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "b9c74815788ba096",
+        "type": "ui_gauge",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "",
+        "group": "46d1518a557e3b35",
+        "order": 1,
+        "width": 2,
+        "height": 2,
+        "gtype": "gage",
+        "title": "P. Inst.",
+        "label": "VA",
+        "format": "{{msg.payload.apparent_power}}",
+        "min": 0,
+        "max": "3600",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "1200",
+        "seg2": "2400",
+        "diff": false,
+        "className": "",
+        "x": 730,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "b5c7bd7d0b62e67c",
+        "type": "ui_template",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "group": "46d1518a557e3b35",
+        "name": "Infos",
+        "order": 4,
+        "width": 6,
+        "height": 1,
+        "format": "<div layout=\"col\" layout-align=\"start left\" text-align=\"center\">\n  <span flex style=\"color: orange; font-size:9.0pt; font-weight: bold; text-align: center\">HC {{msg.payload.current_tier1_summ_delivered}} kWh</span>\n  <span flex style=\"color: #00A2E8; font-size:9.0pt; font-weight: bold; text-align: center\">HP {{msg.payload.current_tier2_summ_delivered}} kWh</span>\n</div>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 730,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9a8d826b180cf7cc",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "save HP & HC",
+        "func": "msg.payload = {};\nmsg.payload = { hp: flow.get('indexHP'), hc: flow.get('indexHC')};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 580,
+        "wires": [
+            [
+                "72e12dee02a9d735"
+            ]
+        ]
+    },
+    {
+        "id": "053adf28066b1bfe",
+        "type": "debug",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "debug 12",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "3dcb3bb629daf919",
+        "type": "influxdb in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "influxdb": "71770f5ff79f3c3a",
+        "name": "conso",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 850,
+        "y": 660,
+        "wires": [
+            [
+                "053adf28066b1bfe",
+                "601a8940562f421d"
+            ]
+        ]
+    },
+    {
+        "id": "1a3685ee4b8ad731",
+        "type": "inject",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "DT",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 610,
+        "y": 660,
+        "wires": [
+            [
+                "8f3704e177458329"
+            ]
+        ]
+    },
+    {
+        "id": "8f3704e177458329",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Query",
+        "func": "const utcOffset = global.get(\"TimezoneOffset\")/3600;\nvar timestamp = new Date();\nvar startOfDay = new Date(new Date(timestamp).setHours(utcOffset, 0, 0, 0)).toISOString();\n\nmsg.query = `SELECT SUM(*) as conso FROM (SELECT MEAN(power) FROM Zlinky where time >= '${startOfDay}' group by time(1h))`;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 660,
+        "wires": [
+            [
+                "3dcb3bb629daf919"
+            ]
+        ]
+    },
+    {
+        "id": "825a9158b563840d",
+        "type": "ui_gauge",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "",
+        "group": "46d1518a557e3b35",
+        "order": 2,
+        "width": 2,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Jour",
+        "label": "kWh",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "60",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "20",
+        "seg2": "40",
+        "diff": false,
+        "className": "",
+        "x": 1110,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "601a8940562f421d",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Fonction",
+        "func": "var time = new Date();\n//var hour = time.getHours();\nvar conso = {};\nconso.payload = Number.parseFloat((msg.payload[0].conso_mean) / 1000).toFixed(2);\nreturn conso;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 660,
+        "wires": [
+            [
+                "825a9158b563840d"
+            ]
+        ]
+    },
+    {
+        "id": "8977e6859104c304",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Query",
+        "func": "const utcOffset = global.get(\"TimezoneOffset\")/3600;\nvar date = new Date();\nvar firstDay = new Date(date.getFullYear(), date.getMonth(), 1);\nvar startOfDay = new Date(new Date(firstDay).setHours(utcOffset, 0, 0, 0)).toISOString();\n\nmsg.query = `SELECT SUM(*) as conso FROM (SELECT MEAN(power) FROM Zlinky where time >= '${startOfDay}' group by time(1h))`;\n//msg.query = `SELECT CUMULATIVE_SUM(MEAN(power)) as conso FROM Zlinky where time >= '${startOfDay}' group by time(1d)`;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 780,
+        "wires": [
+            [
+                "bd5f6072e42f93a8"
+            ]
+        ]
+    },
+    {
+        "id": "7cc77cd0fb2c6119",
+        "type": "comment",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Conso Jour",
+        "info": "",
+        "x": 750,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "1518602607f59720",
+        "type": "comment",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Conso Mois",
+        "info": "",
+        "x": 750,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "bd5f6072e42f93a8",
+        "type": "influxdb in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "influxdb": "71770f5ff79f3c3a",
+        "name": "conso",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 850,
+        "y": 780,
+        "wires": [
+            [
+                "a22760d6b6a63caa",
+                "3ea25e80ba1c3289"
+            ]
+        ]
+    },
+    {
+        "id": "51a52b5ec6a46502",
+        "type": "inject",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "DT",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 610,
+        "y": 780,
+        "wires": [
+            [
+                "8977e6859104c304"
+            ]
+        ]
+    },
+    {
+        "id": "a22760d6b6a63caa",
+        "type": "debug",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "debug 13",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "3ea25e80ba1c3289",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Fonction",
+        "func": "var time = new Date();\nvar days = time.getDay();\nvar conso = {};\nconso.payload = Number.parseFloat(msg.payload[0].conso_mean / 1000).toFixed(1);\nreturn conso;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 780,
+        "wires": [
+            [
+                "47f82f886996e579"
+            ]
+        ]
+    },
+    {
+        "id": "477defc3830ae07a",
+        "type": "comment",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Indicateurs",
+        "info": "",
+        "x": 600,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "47f82f886996e579",
+        "type": "ui_gauge",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "",
+        "group": "46d1518a557e3b35",
+        "order": 3,
+        "width": 2,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Mois",
+        "label": "kWh",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "3000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "1000",
+        "seg2": "2000",
+        "diff": false,
+        "className": "",
+        "x": 1110,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "0de468db9c9b0831",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Daily",
+        "func": "const utcOffset = global.get(\"TimezoneOffset\")/3600;\nvar timestamp = new Date();\nvar startOfDay = new Date(new Date(timestamp).setHours(utcOffset, 0, 0, 0)).toISOString();\n\nmsg.query = `SELECT SUM(*) as conso FROM (SELECT MEAN(power) FROM Zlinky where time >= '${startOfDay}' group by time(1h))`;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 920,
+        "wires": [
+            [
+                "d1480a95c20385d7"
+            ]
+        ]
+    },
+    {
+        "id": "d1480a95c20385d7",
+        "type": "influxdb in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "influxdb": "71770f5ff79f3c3a",
+        "name": "conso",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 810,
+        "y": 920,
+        "wires": [
+            [
+                "c190888f530b5abf"
+            ]
+        ]
+    },
+    {
+        "id": "5f01e8a93b2cafe4",
+        "type": "link in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "pushDaily",
+        "links": [
+            "111eb6e0d7f70aab"
+        ],
+        "x": 585,
+        "y": 920,
+        "wires": [
+            [
+                "0de468db9c9b0831"
+            ]
+        ]
+    },
+    {
+        "id": "c190888f530b5abf",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Fonction",
+        "func": "const data = msg.payload;\n\nif (data === null) {\n    msg = {};\n    return msg;\n}\nmsg.payload = {};\n\nconst value = Number.parseFloat(data[0].conso_mean / 1000).toFixed(2);\nglobal.set(\"electDaily\", value);\nmsg.payload = { elect : value };\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "if (global.get(\"electDaily\") === undefined) {\n    global.set(\"electDaily\", 0);\n}\n",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 920,
+        "wires": [
+            [
+                "0f93af4c85f2fbf2"
+            ]
+        ]
+    },
+    {
+        "id": "0f93af4c85f2fbf2",
+        "type": "influxdb out",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "influxdb": "c6bd24330ac4722f",
+        "name": "Energy",
+        "measurement": "daily",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "energy",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1100,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "b803f51e55bfcaeb",
+        "type": "influxdb out",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "influxdb": "c6bd24330ac4722f",
+        "name": "Energy",
+        "measurement": "monthly",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "energy",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1100,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "9f9c8a24aae35096",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Monthly",
+        "func": "const utcOffset = global.get(\"TimezoneOffset\")/3600;\nvar date = new Date();\nvar firstDay = new Date(date.getFullYear(), date.getMonth(), 1);\nvar startOfDay = new Date(new Date(firstDay).setHours(utcOffset, 0, 0, 0)).toISOString();\n\nmsg.query = `SELECT SUM(*) as conso FROM (SELECT MEAN(power) FROM Zlinky where time >= '${startOfDay}' group by time(1h))`;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 960,
+        "wires": [
+            [
+                "25f09fb8fe6ef82d"
+            ]
+        ]
+    },
+    {
+        "id": "6d6accc5e7277ca1",
+        "type": "link in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "pullZlinky",
+        "links": [
+            "b42149f2ea7533ff"
+        ],
+        "x": 845,
+        "y": 580,
+        "wires": [
+            [
+                "9a8d826b180cf7cc"
+            ]
+        ]
+    },
+    {
+        "id": "0634cb6378a05eb2",
+        "type": "function",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "Fonction",
+        "func": "const data = msg.payload;\n\nif (data === null) {\n    msg = {};\n    return msg;\n}\nmsg.payload = {};\n\nconst value = Number.parseFloat(data[0].conso_mean / 1000).toFixed(2);\nmsg.payload = { elect: value };\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 960,
+        "wires": [
+            [
+                "b803f51e55bfcaeb"
+            ]
+        ]
+    },
+    {
+        "id": "25f09fb8fe6ef82d",
+        "type": "influxdb in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "influxdb": "71770f5ff79f3c3a",
+        "name": "conso",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 810,
+        "y": 960,
+        "wires": [
+            [
+                "0634cb6378a05eb2"
+            ]
+        ]
+    },
+    {
+        "id": "970a13c28e65e2d9",
+        "type": "link in",
+        "z": "498a5b5e5f744dbd",
+        "g": "4650a115906a798f",
+        "name": "pushMonthly",
+        "links": [
+            "f99ec40aa988b848"
+        ],
+        "x": 585,
+        "y": 960,
+        "wires": [
+            [
+                "9f9c8a24aae35096"
+            ]
+        ]
+    },
+    {
+        "id": "4b2a1c8a515ae08d",
+        "type": "mqtt-broker",
+        "name": "mqtt",
+        "broker": "0.0.0.0:1883",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "3",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c6bd24330ac4722f",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "",
+        "usetls": false,
+        "tls": "9895f781.42a5e8",
+        "influxdbVersion": "1.8-flux",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "46d1518a557e3b35",
+        "type": "ui_group",
+        "name": "Enedis (EDF)",
+        "tab": "debe45c5c0056a6c",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "71770f5ff79f3c3a",
+        "type": "influxdb",
+        "z": "498a5b5e5f744dbd",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "zlinky",
+        "name": "Query1.8",
+        "usetls": false,
+        "tls": "9895f781.42a5e8",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "9895f781.42a5e8",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "m2mqtt_srv.crt",
+        "keyname": "m2mqtt_srv.key",
+        "caname": "m2mqtt_ca.crt",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "debe45c5c0056a6c",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "device_hub",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
