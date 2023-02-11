@@ -26,4 +26,10 @@
 >
 >![graphana](/img/graphana.PNG)
 >
+>>4-Définir les crontab
+>
+>>Daily -> 59 59 23 * * *
+>
+>>Monthly -> 58 59 23 L * *
+>
 >### [Article](https://www.maison-et-domotique.com/136395-lixee-zlinky-teleinfo-zigbee-linky/)
