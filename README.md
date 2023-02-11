@@ -18,10 +18,12 @@
 >
 >>2-Import du flow (src/zlinky.json)
 >
->![flow](/img/nodes.png)
+>>![flow](/img/nodes.PNG)
+>
+>>![dashboard](/img/dashboard.PNG)
 >
 >>3-Import du model Grafana (src/grafana.json)
 >
->![dashboard](/img/dashboard.png)
+>![graphana](/img/graphana.PNG)
 >
 >### [Article](https://www.maison-et-domotique.com/136395-lixee-zlinky-teleinfo-zigbee-linky/)
