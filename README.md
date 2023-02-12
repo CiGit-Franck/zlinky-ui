@@ -12,8 +12,7 @@
 
 >### Partie Node-Red
 >>1-Créer la base de recueil des données remontées 
->>>*INFLUX -username <user> -password <password>*
->
+>>>*INFLUX -username __user__ -password __password__*
 >>>*CREATE DATABASE zlinky WITH DURATION 78w*
 >
 >>2-Import du flow (src/zlinky.json)
